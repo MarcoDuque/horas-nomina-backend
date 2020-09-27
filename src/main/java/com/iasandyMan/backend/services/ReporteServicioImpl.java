@@ -49,9 +49,9 @@ public class ReporteServicioImpl implements IReporteServicio {
 		reporteFinal.setHorasNormales(horasNormales(reporte));
 		reporteFinal.setHorasNocturnas(horasNocturnas(reporte));
 		reporteFinal.setHorasDominicales(horasDominicales(reporte));
-		reporteFinal.setHorasNormalesExtras(horasNormalesExtras(reporte));
-		reporteFinal.setHorasNocturnasExtras(horasNocturnasExtras(reporte));
-		reporteFinal.setHorasDominicalesExtras(horasDominicalesExtras(reporte));
+		reporteFinal.setHorasNormalesExtras(horasNormalesExtras(reporte, reporteFinal));
+		reporteFinal.setHorasNocturnasExtras(horasNocturnasExtras(reporte, reporteFinal));
+		reporteFinal.setHorasDominicalesExtras(horasDominicalesExtras(reporte, reporteFinal));
 
 		return reporteFinal;
 	}
@@ -129,79 +129,26 @@ public class ReporteServicioImpl implements IReporteServicio {
 		return horas;
 	}
 
-	private int horasNormalesExtras(List<Reporte> reportes) {
-		ReporteFinal reporteFinal = new ReporteFinal();
-		if (reporteFinal.getHorasNormales() > 48) {
-			int horas = 0;
-			Calendar calendarInicio = Calendar.getInstance();
-			Calendar calendarFin = Calendar.getInstance();
-
-			for (Reporte reporte : reportes) {
-				Date inicio = reporte.getFechaInicio();
-				Date fin = reporte.getFechaFin();
-
-				calendarInicio.setTime(inicio);
-				calendarFin.setTime(fin);
-
-				if (calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SATURDAY
-						&& calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SUNDAY) {
-					if (calendarInicio.get(Calendar.HOUR_OF_DAY) >= 7 && calendarFin.get(Calendar.HOUR_OF_DAY) <= 20) {
-						horas += getDifferenceBetwenDates(inicio, fin);
-					}
-				}
-			}
-			return horas;
+	private int horasNormalesExtras(List<Reporte> reportes, ReporteFinal reporteFinal) {
+		int horasNormales = reporteFinal.getHorasNormales();
+		if (horasNormales > 48) {
+			return horasNormales - 48;
 		}
 		return 0;
 	}
 
-	private int horasNocturnasExtras(List<Reporte> reportes) {
-		ReporteFinal reporteFinal = new ReporteFinal();
-		if (reporteFinal.getHorasNormales() > 48) {
-			int horas = 0;
-			Calendar calendarInicio = Calendar.getInstance();
-			Calendar calendarFin = Calendar.getInstance();
-
-			for (Reporte reporte : reportes) {
-				Date inicio = reporte.getFechaInicio();
-				Date fin = reporte.getFechaFin();
-
-				calendarInicio.setTime(inicio);
-				calendarFin.setTime(fin);
-
-				if (calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SATURDAY
-						&& calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SUNDAY) {
-					if (calendarInicio.get(Calendar.HOUR_OF_DAY) >= 20 && calendarFin.get(Calendar.HOUR_OF_DAY) <= 7) {
-						horas += getDifferenceBetwenDates(inicio, fin);
-					}
-				}
-			}
-
-			return horas;
+	private int horasNocturnasExtras(List<Reporte> reportes, ReporteFinal reporteFinal) {
+		int horasNocturnas = reporteFinal.getHorasNocturnas();
+		if (horasNocturnas > 48) {
+			return horasNocturnas - 48;
 		}
 		return 0;
 	}
 
-	private int horasDominicalesExtras(List<Reporte> reportes) {
-		ReporteFinal reporteFinal = new ReporteFinal();
-		if (reporteFinal.getHorasNormales() > 48) {
-			int horas = 0;
-			Calendar calendarInicio = Calendar.getInstance();
-			Calendar calendarFin = Calendar.getInstance();
-
-			for (Reporte reporte : reportes) {
-				Date inicio = reporte.getFechaInicio();
-				Date fin = reporte.getFechaFin();
-
-				calendarInicio.setTime(inicio);
-				calendarFin.setTime(fin);
-
-				if (calendarInicio.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
-					horas += getDifferenceBetwenDates(inicio, fin);
-				}
-			}
-
-			return horas;
+	private int horasDominicalesExtras(List<Reporte> reportes, ReporteFinal reporteFinal) {
+		int horasDominicales = reporteFinal.getHorasDominicales();
+		if (horasDominicales > 48) {
+			return horasDominicales - 48;
 		}
 		return 0;
 	}
