@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.iasandyMan.backend.domain.Reporte;
+import com.iasandyMan.backend.domain.ReporteFinal;
 import com.iasandyMan.backend.services.contracts.IReporteServicio;
 
 @RestController
@@ -32,7 +33,7 @@ public class ReporteRestControlador {
 	}
 
 	@GetMapping("/reporte")
-	public Object show(@RequestParam String idTecnico, @RequestParam int semana) {
+	public ReporteFinal show(@RequestParam String idTecnico, @RequestParam int semana) {
 		return reporteServicio.findById(idTecnico, semana);
 	}
 
