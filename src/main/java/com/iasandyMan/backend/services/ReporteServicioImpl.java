@@ -28,7 +28,7 @@ public class ReporteServicioImpl implements IReporteServicio {
 	}
 
 	@Override
-	public Object findById(String idTecnico, int semana) {
+	public ReporteFinal findById(String idTecnico, int semana) {
 		Calendar today = Calendar.getInstance();
 		today.set(Calendar.HOUR, 0);
 		today.clear(Calendar.MINUTE);
@@ -42,8 +42,7 @@ public class ReporteServicioImpl implements IReporteServicio {
 		today.add(Calendar.DAY_OF_WEEK, 7);
 		Date maxDate = today.getTime();
 
-		List<Reporte> reporte = reporteDao.findAllByIdTecnicoAndFechaInicioBetweenOrFechaFinBetween(idTecnico, minDate,
-				maxDate, minDate, maxDate);
+		List<Reporte> reporte = reporteDao.findAllByIdTecnico(idTecnico, minDate, maxDate);
 
 		ReporteFinal reporteFinal = new ReporteFinal();
 		reporteFinal.setHorasNormales(horasNormales(reporte));
