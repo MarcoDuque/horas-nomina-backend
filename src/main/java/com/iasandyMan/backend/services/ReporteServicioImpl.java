@@ -43,14 +43,16 @@ public class ReporteServicioImpl implements IReporteServicio {
 		Date maxDate = today.getTime();
 
 		List<Reporte> reporte = reporteDao.findAllByIdTecnico(idTecnico, minDate, maxDate);
-
 		ReporteFinal reporteFinal = new ReporteFinal();
-		reporteFinal.setHorasNormales(horasNormales(reporte));
-		reporteFinal.setHorasNocturnas(horasNocturnas(reporte));
-		reporteFinal.setHorasDominicales(horasDominicales(reporte));
-		reporteFinal.setHorasNormalesExtras(horasNormalesExtras(reporte, reporteFinal));
-		reporteFinal.setHorasNocturnasExtras(horasNocturnasExtras(reporte, reporteFinal));
-		reporteFinal.setHorasDominicalesExtras(horasDominicalesExtras(reporte, reporteFinal));
+		
+		if (reporte.size() > 0) {
+			reporteFinal.setHorasNormales(horasNormales(reporte));
+			reporteFinal.setHorasNocturnas(horasNocturnas(reporte));
+			reporteFinal.setHorasDominicales(horasDominicales(reporte));
+			reporteFinal.setHorasNormalesExtras(horasNormalesExtras(reporte, reporteFinal));
+			reporteFinal.setHorasNocturnasExtras(horasNocturnasExtras(reporte, reporteFinal));
+			reporteFinal.setHorasDominicalesExtras(horasDominicalesExtras(reporte, reporteFinal));
+		} 
 
 		return reporteFinal;
 	}
@@ -73,10 +75,11 @@ public class ReporteServicioImpl implements IReporteServicio {
 
 			calendarInicio.setTime(inicio);
 			calendarFin.setTime(fin);
+			
 
-			if (calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SATURDAY
-					&& calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SUNDAY) {
-				if (calendarInicio.get(Calendar.HOUR_OF_DAY) >= 7 && calendarFin.get(Calendar.HOUR_OF_DAY) <= 20) {
+			if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+					&& calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+				if (calendarInicio.get(Calendar.HOUR_OF_DAY) >= 6 && calendarFin.get(Calendar.HOUR_OF_DAY) <= 19) {
 					horas += getDifferenceBetwenDates(inicio, fin);
 				}
 			}
@@ -97,9 +100,8 @@ public class ReporteServicioImpl implements IReporteServicio {
 			calendarInicio.setTime(inicio);
 			calendarFin.setTime(fin);
 
-			if (calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SATURDAY
-					&& calendarInicio.get(Calendar.DAY_OF_MONTH) != Calendar.SUNDAY) {
-				if (calendarInicio.get(Calendar.HOUR_OF_DAY) >= 20 && calendarFin.get(Calendar.HOUR_OF_DAY) <= 7) {
+			if (calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendarInicio.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+				if (calendarInicio.get(Calendar.HOUR_OF_DAY) > 19) {
 					horas += getDifferenceBetwenDates(inicio, fin);
 				}
 			}
@@ -120,7 +122,7 @@ public class ReporteServicioImpl implements IReporteServicio {
 			calendarInicio.setTime(inicio);
 			calendarFin.setTime(fin);
 
-			if (calendarInicio.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
+			if (calendarInicio.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 				horas += getDifferenceBetwenDates(inicio, fin);
 			}
 		}
